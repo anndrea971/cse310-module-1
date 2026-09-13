@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app-header">
+      <h1>Task Tracker</h1>
+      <p class="app-subtitle">CSE 310 &mdash; Module 1, JavaScript</p>
+    </header>
+
+    <!-- Shown/hidden with the .hidden class when addTask() or saveTasks() throws -->
+    <div id="error-message" class="error-banner hidden" role="alert"></div>
+
+    <!-- Adds a new top-level task -->
+    <form id="task-form" class="task-form">
+      <input
+        type="text"
+        id="task-title"
+        class="title-input"
+        placeholder="What needs to be done?"
+        autocomplete="off"
+      />
+      <input type="date" id="task-due-date" class="date-input" />
+      <button type="submit" class="btn btn-primary">Add task</button>
+    </form>
+
+    <div class="toolbar">
+      <div class="filters" role="tablist" aria-label="Filter tasks">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+      </div>
+      <button id="clear-completed-btn" class="link-btn">Clear completed</button>
+    </div>
+
+    <!-- renderTaskTree() in recursion.js rebuilds this on every change -->
+    <ul id="task-list" class="task-list"></ul>
+
+    <p id="empty-state" class="empty-state hidden">
+      Nothing here yet. Add your first task above.
+    </p>
+
+    <p id="stats" class="stats"></p>
+  </main>
+
+  <!-- External library (module requirement): date-fns, used to format due dates -->
+  <script src="https://cdn.jsdelivr.net/npm/date-fns@3.6.0/cdn.min.js"></script>
+  <!-- Recursive tree helpers (search, remove, flatten, render) -->
+  <script src="recursion.js"></script>
+  <!-- App state, events, ES6 array-method logic, exception handling -->
+  <script src="script.js"></script>
+</body>
+</html>
