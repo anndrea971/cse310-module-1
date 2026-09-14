@@ -1,10 +1,3 @@
-/* ============================================================
-   Task Tracker — style.css
-   Design concept: a paper index-card / field-notebook feel —
-   warm paper background, a single ink-teal accent, hairline
-   dividers instead of card shadows, amber tags for due dates.
-   ============================================================ */
-
 :root {
   --paper: #f6f3ec;
   --surface: #ffffff;
@@ -38,7 +31,7 @@ body {
   padding: 48px 24px 80px;
 }
 
-/* ---------- Header ---------- */
+/* Header */
 
 .app-header h1 {
   font-family: "Fraunces", Georgia, serif;
@@ -54,7 +47,7 @@ body {
   font-size: 0.95rem;
 }
 
-/* ---------- Error banner ---------- */
+/*Error banner */
 
 .error-banner {
   background: var(--amber-soft);
@@ -70,7 +63,7 @@ body {
   display: none !important;
 }
 
-/* ---------- Add-task form ---------- */
+/*Add-task form*/
 
 .task-form {
   display: flex;
@@ -116,7 +109,7 @@ input[type="date"]:focus {
   background: #275c4e;
 }
 
-/* ---------- Toolbar: filters + clear completed ---------- */
+/*Toolbar*/
 
 .toolbar {
   display: flex;
@@ -167,7 +160,7 @@ input[type="date"]:focus {
   color: var(--danger);
 }
 
-/* ---------- Task list ---------- */
+/*Task list*/
 
 .task-list {
   list-style: none;
@@ -257,7 +250,7 @@ input[type="date"]:focus {
   color: var(--danger) !important;
 }
 
-/* ---------- Inline edit / subtask forms ---------- */
+/*subtask forms*/
 
 .edit-form,
 .subtask-form {
@@ -283,7 +276,7 @@ input[type="date"]:focus {
   cursor: pointer;
 }
 
-/* ---------- Subtasks ---------- */
+/*Subtasks*/
 
 .subtask-list {
   list-style: none;
@@ -296,7 +289,7 @@ input[type="date"]:focus {
   padding: 8px 0;
 }
 
-/* ---------- Empty state ---------- */
+/*Empty*/
 
 .empty-state {
   color: var(--ink-muted);
@@ -304,7 +297,7 @@ input[type="date"]:focus {
   text-align: center;
 }
 
-/* ---------- Stats ---------- */
+/*Stats*/
 
 .stats {
   margin-top: 20px;
@@ -312,7 +305,7 @@ input[type="date"]:focus {
   font-size: 0.9rem;
 }
 
-/* ---------- Small screens ---------- */
+/*Small screens*/
 
 @media (max-width: 480px) {
   .task-form {
