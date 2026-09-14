@@ -1,3 +1,4 @@
+// Custom error type thrown when a task title is submitted blank
 class EmptyTaskError extends Error {
   constructor(message) {
     super(message);
@@ -5,11 +6,13 @@ class EmptyTaskError extends Error {
   }
 }
 
+// State
 let tasks = []; 
 let currentFilter = "all"; 
 
 const STORAGE_KEY = "task-tracker-data";
 
+// DOM Elements
 const taskForm = document.getElementById("task-form");
 const taskTitleInput = document.getElementById("task-title");
 const taskDueDateInput = document.getElementById("task-due-date");
@@ -20,6 +23,7 @@ const errorEl = document.getElementById("error-message");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const clearCompletedBtn = document.getElementById("clear-completed-btn");
 
+// Loads saved tasks from localStorage or returns empty array if unreadable
 function loadTasks() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -30,6 +34,7 @@ function loadTasks() {
   }
 }
 
+// Persists the current tasks array to localStorage
 function saveTasks() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -38,16 +43,19 @@ function saveTasks() {
   }
 }
 
+// Displays a temporal error message in the banner
 function showError(message) {
   errorEl.textContent = message;
   errorEl.classList.remove("hidden");
   setTimeout(() => errorEl.classList.add("hidden"), 4000);
 }
 
+// Generates a short unique string ID for new tasks
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
+// Formats an ISO date string for display using the date-fns library
 function formatDueDate(isoDate) {
   try {
     const date = new Date(isoDate + "T00:00:00");
@@ -57,6 +65,7 @@ function formatDueDate(isoDate) {
   }
 }
 
+// Factory function that constructs a new task object
 function createTask(title, dueDate) {
   return {
     id: generateId(),
@@ -67,6 +76,7 @@ function createTask(title, dueDate) {
   };
 }
 
+// Adds a new top-level task or subtask and updates storage
 function addTask(title, dueDate, parentId = null) {
   if (!title || !title.trim()) {
     throw new EmptyTaskError("Task title can't be empty.");
@@ -88,6 +98,7 @@ function addTask(title, dueDate, parentId = null) {
   render();
 }
 
+// Toggles completion status of a task by ID
 function toggleComplete(id) {
   const task = findTaskById(tasks, id);
   if (!task) return;
@@ -96,6 +107,7 @@ function toggleComplete(id) {
   render();
 }
 
+// Updates title of an existing task after validating input
 function editTaskTitle(id, newTitle) {
   if (!newTitle || !newTitle.trim()) {
     throw new EmptyTaskError("Task title can't be empty.");
@@ -107,18 +119,21 @@ function editTaskTitle(id, newTitle) {
   render();
 }
 
+// Deletes a task from the list by ID
 function deleteTask(id) {
   tasks = removeTaskById(tasks, id);
   saveTasks();
   render();
 }
 
+// Removes all completed tasks across all levels
 function clearCompleted() {
   tasks = removeCompleted(tasks);
   saveTasks();
   render();
 }
 
+// Builds inline DOM form element for editing task titles
 function buildEditForm(task) {
   const form = document.createElement("div");
   form.className = "edit-form hidden";
@@ -147,10 +162,12 @@ function buildEditForm(task) {
   return form;
 }
 
+// Toggles visibility of a task row's edit form
 function toggleEditForm(li) {
   li.querySelector(".edit-form").classList.toggle("hidden");
 }
 
+// Builds inline DOM form element for adding subtasks
 function buildSubtaskForm(task) {
   const form = document.createElement("div");
   form.className = "subtask-form hidden";
@@ -176,10 +193,12 @@ function buildSubtaskForm(task) {
   return form;
 }
 
+// Toggles visibility of a task row's subtask creation form
 function toggleSubtaskForm(li) {
   li.querySelector(".subtask-form").classList.toggle("hidden");
 }
 
+// Calculates total, active, and completed task counts using Array.reduce
 function computeStats() {
   const flat = flattenTasks(tasks); 
   return flat.reduce(
@@ -192,6 +211,7 @@ function computeStats() {
   );
 }
 
+// Renders total task progress percentage in the footer
 function renderStats() {
   const { total, completed } = computeStats();
   if (total === 0) {
@@ -202,6 +222,7 @@ function renderStats() {
   statsEl.textContent = `You've completed ${completed} of ${total} tasks (${percent}%).`;
 }
 
+// Rebuilds and renders task list DOM structure based on filter state
 function render() {
   taskListEl.innerHTML = ""; 
 
@@ -226,6 +247,7 @@ function render() {
   renderStats();
 }
 
+// Event Listeners
 taskForm.addEventListener("submit", event => {
   event.preventDefault();
   try {
@@ -249,5 +271,6 @@ filterButtons.forEach(button => {
 
 clearCompletedBtn.addEventListener("click", clearCompleted);
 
+// Initial Application Load
 tasks = loadTasks();
 render();
