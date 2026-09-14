@@ -1,21 +1,3 @@
-/**
- * script.js
- * CSE 310 - Applied Programming, Module 1 (JavaScript)
- *
- * Holds app state, localStorage persistence, event handling, and the
- * ES6 array-method logic (map/filter/reduce/find). The tree-recursion
- * helpers this file calls (findTaskById, removeTaskById, flattenTasks,
- * renderTaskTree) live in recursion.js, which is loaded first.
- */
-
-// ---------- Custom error type ----------
-
-/**
- * Thrown when a task or subtask is submitted with a blank title.
- * Giving validation problems their own error type lets the code that
- * calls addTask()/editTaskTitle() catch *this* specific case (and show
- * a friendly message) separately from a genuinely unexpected error.
- */
 class EmptyTaskError extends Error {
   constructor(message) {
     super(message);
@@ -23,14 +5,10 @@ class EmptyTaskError extends Error {
   }
 }
 
-// ---------- State ----------
-
-let tasks = []; // top-level task objects; each may hold nested subtasks
-let currentFilter = "all"; // "all" | "active" | "completed"
+let tasks = []; 
+let currentFilter = "all"; 
 
 const STORAGE_KEY = "task-tracker-data";
-
-// ---------- DOM references ----------
 
 const taskForm = document.getElementById("task-form");
 const taskTitleInput = document.getElementById("task-title");
@@ -41,8 +19,6 @@ const statsEl = document.getElementById("stats");
 const errorEl = document.getElementById("error-message");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const clearCompletedBtn = document.getElementById("clear-completed-btn");
-
-// ---------- Persistence (localStorage) ----------
 
 /**
  * Loads saved tasks from localStorage. Wrapped in try/catch because the
@@ -60,10 +36,6 @@ function loadTasks() {
   }
 }
 
-/**
- * Saves the current tasks array to localStorage. Wrapped in try/catch
- * because storage can fail (quota exceeded, private browsing, etc.).
- */
 function saveTasks() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
@@ -71,8 +43,6 @@ function saveTasks() {
     showError("Your changes could not be saved: " + error.message);
   }
 }
-
-// ---------- Small helpers ----------
 
 /**
  * Displays a message in the error banner for a few seconds.
@@ -106,11 +76,10 @@ function formatDueDate(isoDate) {
     const date = new Date(isoDate + "T00:00:00");
     return dateFns.format(date, "MMM d, yyyy");
   } catch (error) {
-    return isoDate; // fall back to the raw value rather than crash the row
+    return isoDate; 
   }
 }
 
-// ---------- Task CRUD ----------
 
 /**
  * Builds a new task object.
@@ -199,16 +168,11 @@ function deleteTask(id) {
   render();
 }
 
-/**
- * Removes every completed task, at every level of nesting.
- */
 function clearCompleted() {
   tasks = removeCompleted(tasks); // recursion.js
   saveTasks();
   render();
 }
-
-// ---------- Inline edit / add-subtask forms ----------
 
 /**
  * Builds the (initially hidden) inline edit form for a task: a text
@@ -232,7 +196,7 @@ function buildEditForm(task) {
     try {
       editTaskTitle(task.id, input.value);
     } catch (error) {
-      showError(error.message); // catches EmptyTaskError from editTaskTitle
+      showError(error.message); 
     }
   });
 
@@ -276,7 +240,7 @@ function buildSubtaskForm(task) {
       input.value = "";
       form.classList.add("hidden");
     } catch (error) {
-      showError(error.message); // catches EmptyTaskError from addTask
+      showError(error.message); 
     }
   });
 
@@ -292,7 +256,6 @@ function toggleSubtaskForm(li) {
   li.querySelector(".subtask-form").classList.toggle("hidden");
 }
 
-// ---------- Stats + rendering ----------
 
 /**
  * Computes summary stats across every task, including subtasks, by
@@ -300,7 +263,7 @@ function toggleSubtaskForm(li) {
  * @returns {{total: number, completed: number, active: number}}
  */
 function computeStats() {
-  const flat = flattenTasks(tasks); // recursion.js
+  const flat = flattenTasks(tasks); 
   return flat.reduce(
     (stats, task) => {
       stats.total += 1;
@@ -311,9 +274,6 @@ function computeStats() {
   );
 }
 
-/**
- * Renders the summary line below the task list.
- */
 function renderStats() {
   const { total, completed } = computeStats();
   if (total === 0) {
@@ -324,19 +284,12 @@ function renderStats() {
   statsEl.textContent = `You've completed ${completed} of ${total} tasks (${percent}%).`;
 }
 
-/**
- * Rebuilds the task list in the DOM based on the current filter.
- *  - "all": the full nested tree, exactly as stored.
- *  - "active" / "completed": the tree is flattened (Array.filter) and
- *    shown as a simple flat list, since a partially-matching nested
- *    tree is hard to read at a glance.
- */
 function render() {
-  taskListEl.innerHTML = ""; // clear before rebuilding
+  taskListEl.innerHTML = ""; 
 
   const visibleCount =
     currentFilter === "all"
-      ? flattenTasks(tasks).length // recursion.js
+      ? flattenTasks(tasks).length 
       : flattenTasks(tasks).filter(task =>
           currentFilter === "completed" ? task.completed : !task.completed
         ).length;
@@ -344,7 +297,7 @@ function render() {
   emptyStateEl.classList.toggle("hidden", visibleCount > 0);
 
   if (currentFilter === "all") {
-    renderTaskTree(tasks, taskListEl); // recursion.js
+    renderTaskTree(tasks, taskListEl); 
   } else {
     const filtered = flattenTasks(tasks).filter(task =>
       currentFilter === "completed" ? task.completed : !task.completed
@@ -355,8 +308,6 @@ function render() {
   renderStats();
 }
 
-// ---------- Event listeners ----------
-
 taskForm.addEventListener("submit", event => {
   event.preventDefault();
   try {
@@ -365,7 +316,7 @@ taskForm.addEventListener("submit", event => {
     taskDueDateInput.value = "";
     taskTitleInput.focus();
   } catch (error) {
-    showError(error.message); // catches EmptyTaskError from addTask
+    showError(error.message);
   }
 });
 
@@ -379,8 +330,6 @@ filterButtons.forEach(button => {
 });
 
 clearCompletedBtn.addEventListener("click", clearCompleted);
-
-// ---------- Init ----------
 
 tasks = loadTasks();
 render();
