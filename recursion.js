@@ -1,15 +1,4 @@
 /**
- * recursion.js
- * CSE 310 - Applied Programming, Module 1 (JavaScript)
- *
- * Tasks can contain subtasks, which can contain their own subtasks, and
- * so on - the data is a tree, not a flat list. Every function in this
- * file walks that tree by calling itself on a task's `subtasks` array,
- * which is what makes each of them recursive. script.js calls these
- * functions but never has to know how deep the nesting goes.
- */
-
-/**
  * Recursively searches the task tree for a task with the given id.
  * Checks the current level with Array.find(), then recurses into
  * each task's subtasks until a match turns up (or the tree runs out).
@@ -22,7 +11,7 @@ function findTaskById(taskList, id) {
   if (directMatch) return directMatch;
 
   for (const task of taskList) {
-    const foundInChildren = findTaskById(task.subtasks, id); // recursive call
+    const foundInChildren = findTaskById(task.subtasks, id); 
     if (foundInChildren) return foundInChildren;
   }
   return null;
@@ -42,7 +31,7 @@ function removeTaskById(taskList, id) {
     .filter(task => task.id !== id)
     .map(task => ({
       ...task,
-      subtasks: removeTaskById(task.subtasks, id) // recursive call
+      subtasks: removeTaskById(task.subtasks, id) 
     }));
 }
 
@@ -57,7 +46,7 @@ function removeCompleted(taskList) {
     .filter(task => !task.completed)
     .map(task => ({
       ...task,
-      subtasks: removeCompleted(task.subtasks) // recursive call
+      subtasks: removeCompleted(task.subtasks)
     }));
 }
 
@@ -70,7 +59,7 @@ function removeCompleted(taskList) {
 function flattenTasks(taskList) {
   return taskList.reduce((flat, task) => {
     flat.push(task);
-    flat.push(...flattenTasks(task.subtasks)); // recursive call
+    flat.push(...flattenTasks(task.subtasks)); 
     return flat;
   }, []);
 }
@@ -93,7 +82,6 @@ function renderTaskTree(taskList, container, depth = 0, flat = false) {
     const li = document.createElement("li");
     li.className = "task-item" + (task.completed ? " completed" : "");
 
-    // --- checkbox + title + due date ---
     const content = document.createElement("div");
     content.className = "task-content";
 
@@ -112,11 +100,10 @@ function renderTaskTree(taskList, container, depth = 0, flat = false) {
     if (task.dueDate) {
       const dueSpan = document.createElement("span");
       dueSpan.className = "task-due-date";
-      dueSpan.textContent = formatDueDate(task.dueDate); // script.js, uses date-fns
+      dueSpan.textContent = formatDueDate(task.dueDate); 
       content.append(dueSpan);
     }
 
-    // --- action row ---
     const actions = document.createElement("div");
     actions.className = "task-actions";
 
@@ -142,15 +129,15 @@ function renderTaskTree(taskList, container, depth = 0, flat = false) {
     }
 
     li.append(content, actions);
-    li.appendChild(buildEditForm(task)); // hidden until "Edit" is clicked
+    li.appendChild(buildEditForm(task)); 
 
     if (!flat) {
-      li.appendChild(buildSubtaskForm(task)); // hidden until "+ Subtask" is clicked
+      li.appendChild(buildSubtaskForm(task));
 
       if (task.subtasks.length > 0) {
         const nestedList = document.createElement("ul");
         nestedList.className = "subtask-list";
-        renderTaskTree(task.subtasks, nestedList, depth + 1); // recursive call
+        renderTaskTree(task.subtasks, nestedList, depth + 1); 
         li.appendChild(nestedList);
       }
     }
