@@ -2,7 +2,7 @@
 
 As a software engineering student, my goal for this project was to deepen my understanding of client-side JavaScript, particularly focusing on state management, DOM manipulation, and complex data structures.
 
-I built a hierarchical Task Tracker application. Unlike a standard to-do list, this software allows users to create nested subtasks to break down larger projects. It features persistent storage using `localStorage`, filtering capabilities (All, Active, Completed), and dynamic due-date formatting.
+I built Task Tracker application. Unlike a standard to-do list, this software allows users to create nested subtasks to break down larger projects. It features persistent storage using `localStorage`, filtering capabilities (All, Active, Completed), and dynamic due-date formatting.
 
 I wrote this software to demonstrate my proficiency with ES6 array methods, recursive tree traversal, and error handling in vanilla JavaScript without relying on a frontend framework.
 
@@ -13,7 +13,7 @@ I wrote this software to demonstrate my proficiency with ES6 array methods, recu
 * Visual Studio Code
 * JavaScript (ES6+)
 * HTML5 & CSS3
-* External Library: [date-fns](https://date-fns.org/) (via CDN for date formatting)
+* External Library: [date-fns](https://date-fns.org/)
 
 # Useful Websites
 
