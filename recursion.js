@@ -1,11 +1,3 @@
-/**
- * Recursively searches the task tree for a task with the given id.
- * Checks the current level with Array.find(), then recurses into
- * each task's subtasks until a match turns up (or the tree runs out).
- * @param {Array<object>} taskList - tasks to search (top level or a subtasks array)
- * @param {string} id
- * @returns {object|null} the matching task, or null if it isn't in the tree
- */
 function findTaskById(taskList, id) {
   const directMatch = taskList.find(task => task.id === id);
   if (directMatch) return directMatch;
@@ -17,15 +9,6 @@ function findTaskById(taskList, id) {
   return null;
 }
 
-/**
- * Recursively rebuilds the tree with the task matching `id` removed,
- * however deeply it is nested. Array.filter() drops the match at the
- * current level; Array.map() rebuilds every surviving task with its
- * own subtasks processed the same way.
- * @param {Array<object>} taskList
- * @param {string} id
- * @returns {Array<object>} a new tree with the task removed
- */
 function removeTaskById(taskList, id) {
   return taskList
     .filter(task => task.id !== id)
@@ -35,12 +18,6 @@ function removeTaskById(taskList, id) {
     }));
 }
 
-/**
- * Recursively rebuilds the tree with every completed task removed,
- * at every level of nesting.
- * @param {Array<object>} taskList
- * @returns {Array<object>} a new tree with completed tasks removed
- */
 function removeCompleted(taskList) {
   return taskList
     .filter(task => !task.completed)
@@ -50,12 +27,6 @@ function removeCompleted(taskList) {
     }));
 }
 
-/**
- * Recursively collapses the nested task tree into one flat array, so
- * stats and the Active/Completed views don't need to care about depth.
- * @param {Array<object>} taskList
- * @returns {Array<object>} every task in the tree, parents and subtasks alike
- */
 function flattenTasks(taskList) {
   return taskList.reduce((flat, task) => {
     flat.push(task);
@@ -64,19 +35,6 @@ function flattenTasks(taskList) {
   }, []);
 }
 
-/**
- * Recursively builds the <li>/<ul> DOM structure for a list of tasks and
- * appends it to `container`. Every element is created with
- * document.createElement() and styled purely through CSS classes from
- * style.css - nothing here is hard-coded markup from index.html.
- *
- * @param {Array<object>} taskList - tasks to render at this level
- * @param {HTMLElement} container - element the new <li>s are appended to
- * @param {number} [depth=0] - nesting depth (unused visually, kept for clarity/debugging)
- * @param {boolean} [flat=false] - when true, don't render this task's own
- *   subtasks or its "+ Subtask" button (used by the Active/Completed views,
- *   which show a flat list instead of the nested tree)
- */
 function renderTaskTree(taskList, container, depth = 0, flat = false) {
   taskList.forEach(task => {
     const li = document.createElement("li");
