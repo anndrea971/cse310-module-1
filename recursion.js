@@ -1,3 +1,4 @@
+// Recursively searches the task tree to find a task by ID
 function findTaskById(taskList, id) {
   const directMatch = taskList.find(task => task.id === id);
   if (directMatch) return directMatch;
@@ -9,6 +10,7 @@ function findTaskById(taskList, id) {
   return null;
 }
 
+// Recursively rebuilds tree excluding the task matching specified ID
 function removeTaskById(taskList, id) {
   return taskList
     .filter(task => task.id !== id)
@@ -18,6 +20,7 @@ function removeTaskById(taskList, id) {
     }));
 }
 
+// Recursively removes completed tasks across all levels of the tree
 function removeCompleted(taskList) {
   return taskList
     .filter(task => !task.completed)
@@ -27,6 +30,7 @@ function removeCompleted(taskList) {
     }));
 }
 
+// Recursively flattens nested task tree into a single array
 function flattenTasks(taskList) {
   return taskList.reduce((flat, task) => {
     flat.push(task);
@@ -35,6 +39,7 @@ function flattenTasks(taskList) {
   }, []);
 }
 
+// Recursively constructs DOM list elements for tasks and nested subtasks
 function renderTaskTree(taskList, container, depth = 0, flat = false) {
   taskList.forEach(task => {
     const li = document.createElement("li");
