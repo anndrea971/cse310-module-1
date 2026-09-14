@@ -20,12 +20,6 @@ const errorEl = document.getElementById("error-message");
 const filterButtons = document.querySelectorAll(".filter-btn");
 const clearCompletedBtn = document.getElementById("clear-completed-btn");
 
-/**
- * Loads saved tasks from localStorage. Wrapped in try/catch because the
- * stored value could be missing, or corrupted (e.g. hand-edited in
- * DevTools), which makes JSON.parse throw a SyntaxError.
- * @returns {Array<object>} the saved tasks, or [] if there are none/they're invalid
- */
 function loadTasks() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -44,33 +38,16 @@ function saveTasks() {
   }
 }
 
-/**
- * Displays a message in the error banner for a few seconds.
- * @param {string} message
- */
 function showError(message) {
   errorEl.textContent = message;
   errorEl.classList.remove("hidden");
   setTimeout(() => errorEl.classList.add("hidden"), 4000);
 }
 
-/**
- * Generates a short, good-enough-for-this-app unique id. Avoids
- * crypto.randomUUID(), which some browsers restrict to secure
- * contexts - this file is sometimes opened directly from disk.
- * @returns {string}
- */
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 }
 
-/**
- * Formats an ISO date string for display using date-fns (loaded via
- * CDN in index.html). This satisfies the "use a library written by
- * someone else" requirement.
- * @param {string} isoDate - value from an <input type="date">, e.g. "2026-09-20"
- * @returns {string} e.g. "Sep 20, 2026"
- */
 function formatDueDate(isoDate) {
   try {
     const date = new Date(isoDate + "T00:00:00");
@@ -80,13 +57,6 @@ function formatDueDate(isoDate) {
   }
 }
 
-
-/**
- * Builds a new task object.
- * @param {string} title
- * @param {string} dueDate - ISO date string, or "" for none
- * @returns {object}
- */
 function createTask(title, dueDate) {
   return {
     id: generateId(),
@@ -97,16 +67,6 @@ function createTask(title, dueDate) {
   };
 }
 
-/**
- * Adds a new task. With no parentId it becomes a new top-level task;
- * with a parentId it is pushed into that task's subtasks array (the
- * parent is located recursively, since it could be nested anywhere).
- * Throws EmptyTaskError on a blank title - callers are expected to
- * catch it and show the message via showError().
- * @param {string} title
- * @param {string} dueDate
- * @param {string|null} [parentId]
- */
 function addTask(title, dueDate, parentId = null) {
   if (!title || !title.trim()) {
     throw new EmptyTaskError("Task title can't be empty.");
@@ -117,7 +77,7 @@ function addTask(title, dueDate, parentId = null) {
   if (parentId === null) {
     tasks.push(newTask);
   } else {
-    const parent = findTaskById(tasks, parentId); // recursion.js
+    const parent = findTaskById(tasks, parentId);
     if (!parent) {
       throw new Error("Couldn't find the parent task for that subtask.");
     }
@@ -128,59 +88,37 @@ function addTask(title, dueDate, parentId = null) {
   render();
 }
 
-/**
- * Flips a task's completed flag.
- * @param {string} id
- */
 function toggleComplete(id) {
-  const task = findTaskById(tasks, id); // recursion.js
+  const task = findTaskById(tasks, id);
   if (!task) return;
   task.completed = !task.completed;
   saveTasks();
   render();
 }
 
-/**
- * Updates a task's title. Throws EmptyTaskError on a blank value, same
- * as addTask().
- * @param {string} id
- * @param {string} newTitle
- */
 function editTaskTitle(id, newTitle) {
   if (!newTitle || !newTitle.trim()) {
     throw new EmptyTaskError("Task title can't be empty.");
   }
-  const task = findTaskById(tasks, id); // recursion.js
+  const task = findTaskById(tasks, id); 
   if (!task) return;
   task.title = newTitle.trim();
   saveTasks();
   render();
 }
 
-/**
- * Removes a task (and any subtasks it has) from the tree, wherever it
- * is nested.
- * @param {string} id
- */
 function deleteTask(id) {
-  tasks = removeTaskById(tasks, id); // recursion.js
+  tasks = removeTaskById(tasks, id);
   saveTasks();
   render();
 }
 
 function clearCompleted() {
-  tasks = removeCompleted(tasks); // recursion.js
+  tasks = removeCompleted(tasks);
   saveTasks();
   render();
 }
 
-/**
- * Builds the (initially hidden) inline edit form for a task: a text
- * input pre-filled with its current title, plus Save/Cancel. Showing
- * and hiding it is done purely by toggling the `.hidden` CSS class.
- * @param {object} task
- * @returns {HTMLElement}
- */
 function buildEditForm(task) {
   const form = document.createElement("div");
   form.className = "edit-form hidden";
@@ -209,20 +147,10 @@ function buildEditForm(task) {
   return form;
 }
 
-/**
- * Shows or hides a task row's edit form.
- * @param {HTMLElement} li - the task's <li> element
- */
 function toggleEditForm(li) {
   li.querySelector(".edit-form").classList.toggle("hidden");
 }
 
-/**
- * Builds the (initially hidden) inline form used to add a subtask
- * under a given parent task.
- * @param {object} task - the parent task
- * @returns {HTMLElement}
- */
 function buildSubtaskForm(task) {
   const form = document.createElement("div");
   form.className = "subtask-form hidden";
@@ -248,20 +176,10 @@ function buildSubtaskForm(task) {
   return form;
 }
 
-/**
- * Shows or hides a task row's "add subtask" form.
- * @param {HTMLElement} li - the task's <li> element
- */
 function toggleSubtaskForm(li) {
   li.querySelector(".subtask-form").classList.toggle("hidden");
 }
 
-
-/**
- * Computes summary stats across every task, including subtasks, by
- * flattening the tree (recursion.js) and reducing it to counts.
- * @returns {{total: number, completed: number, active: number}}
- */
 function computeStats() {
   const flat = flattenTasks(tasks); 
   return flat.reduce(
