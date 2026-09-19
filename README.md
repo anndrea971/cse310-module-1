@@ -6,7 +6,7 @@ I built Task Tracker application. Unlike a standard to-do list, this software al
 
 I wrote this software to demonstrate my proficiency with ES6 array methods, recursive tree traversal, and error handling in vanilla JavaScript without relying on a frontend framework.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/7xAxhnS672A)
 
 # Development Environment
 
