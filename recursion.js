@@ -1,4 +1,8 @@
 // Recursively searches the task tree to find a task by ID
+// Recursive Tree Searching
+// To satisfy the recursion requirement, my data structure is a tree. 
+// findTaskById uses .find() on the current array, and if no match turns up,
+//  it recursively calls itself on every task's subtasks array until it traverses the tree
 function findTaskById(taskList, id) {
   const directMatch = taskList.find(task => task.id === id);
   if (directMatch) return directMatch;
@@ -40,6 +44,9 @@ function flattenTasks(taskList) {
 }
 
 // Recursively constructs DOM list elements for tasks and nested subtasks
+// To generate DOM structures dynamically, renderTaskTree uses document.createElement to build elements
+//  If a task contains subtasks, it recursively calls itself to build a nested
+//  <ul> sub-list and appends it to the parent task
 function renderTaskTree(taskList, container, depth = 0, flat = false) {
   taskList.forEach(task => {
     const li = document.createElement("li");

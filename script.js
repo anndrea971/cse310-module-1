@@ -1,4 +1,8 @@
 // Custom error type thrown when a task title is submitted blank
+// *** Custom Exception Handling
+// To satisfy the custom error requirement, I created an EmptyTaskError class. 
+// Whenever a user submits a blank task title, addTask throws this error, 
+// which my event listener catches to display a UI warning banner.
 class EmptyTaskError extends Error {
   constructor(message) {
     super(message);
@@ -199,6 +203,10 @@ function toggleSubtaskForm(li) {
 }
 
 // Calculates total, active, and completed task counts using Array.reduce
+// *** ES6 Array Methods
+// For native ES6 array methods, I used .reduce() inside computeStats. 
+// It takes our flattened task array and aggregates total, active, 
+// and completed task counts in a single pass to update the statistics display
 function computeStats() {
   const flat = flattenTasks(tasks); 
   return flat.reduce(
